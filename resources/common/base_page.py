@@ -39,8 +39,9 @@ class BasePage:
                                 False if the element is hidden or does not exist
         """
         try:
-            element = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located(locator))
-            return bool(element.is_displayed())
+            # element = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located(locator))
+            # return bool(element.is_displayed())
+            return bool(WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located(locator)))
         except TimeoutException:
             return False
         except NoSuchElementException:
