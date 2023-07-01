@@ -1,5 +1,5 @@
 from resources.common.base_page import BasePage
-# from resources.disney.pages.home_page import HomePage
+from resources.disney.pages.home_page import HomePage
 # from resources.disney.pages.sign_in_page import SignInPage
 
 
@@ -13,5 +13,5 @@ class Application:
 
     def __init__(self, driver):
         self.base_page = BasePage(driver)
-        # self.home_page = HomePage(driver)
+        self.home_page = HomePage(driver)
         # self.signin_page = SignInPage(driver)
