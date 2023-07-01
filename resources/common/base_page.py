@@ -56,8 +56,7 @@ class BasePage:
                                 False if the element is displayed/visible
         """
         try:
-            WebDriverWait(self.driver, 5).until(EC.invisibility_of_element_located(locator))
-            return True
+            return bool(WebDriverWait(self.driver, 5).until(EC.invisibility_of_element_located(locator)))
         except TimeoutException:
             return False
         except NoSuchElementException:
