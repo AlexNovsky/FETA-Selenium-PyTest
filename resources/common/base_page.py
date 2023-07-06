@@ -18,6 +18,8 @@ class BasePage:
         """Initialize self
         """
         self.driver = driver
+        self.driver_wait = WebDriverWait(self.driver, 5)
+        self.wait_time = 5
 
     def click(self, locator: WebElement or str or tuple) -> None:
         """Click action on provided element
@@ -39,8 +41,6 @@ class BasePage:
                                 False if the element is hidden or does not exist
         """
         try:
-            # element = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located(locator))
-            # return bool(element.is_displayed())
             return bool(WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located(locator)))
         except TimeoutException:
             return False
@@ -115,8 +115,7 @@ class BasePage:
                                 False if the element is hidden or does not exist
         """
         try:
-            element = WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable(locator))
-            return bool(element.is_clickable())
+            return bool(WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable(locator)))
         except TimeoutException:
             return False
         except NoSuchElementException:
@@ -139,19 +138,43 @@ class BasePage:
         :return:                none
         """
         WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(locator))
-        element = self.driver.find_element(locator)
+        element = self.driver.find_element(*locator)
         element.send_keys(text)
 
     def clear(self, locator: WebElement or str or tuple) -> None:
         """Clear a text field with the provided locator
 
-        :param locator:         One of: - WebElement object
-                                        - String Key to find a locator xpath string within page class's attributes
-                                        - 2-item tuple containing: (locator strategy, locator identifying string)
-        :return:                None
+        # :param locator:         One of: - WebElement object
+        #                                 - String Key to find a locator xpath string within page class's attributes
+        #                                 - 2-item tuple containing: (locator strategy, locator identifying string)
+        # :return:                None
         """
-        element = self.driver.find_element(locator).clear()
+        element = self.driver.find_element(*locator)
+        element.clear()
         element.send_keys(Keys.COMMAND + "a")
         element.send_keys(Keys.CONTROL + "a")
         element.send_keys(Keys.DELETE)
         element.send_keys(Keys.BACKSPACE)
+
+    def switch_to_frame(self, locator: WebElement or str or tuple) -> None:
+        """Switching to desired iframe on the webpage
+
+        # :param locator:         One of: - WebElement object
+        #                                 - String Key to find a locator xpath string within page class's attributes
+        #                                 - 2-item tuple containing: (locator strategy, locator identifying string)
+        # :return:                None
+        """
+        frame = self.driver.find_element(*locator)
+        self.driver.switch_to.frame(frame)
+
+    def get_element_text(self, locator: WebElement or str or tuple) -> str:
+        """Returns a text valur of the desired element
+
+        # :param locator:         One of: - WebElement object
+        #                                 - String Key to find a locator xpath string within page class's attributes
+        #                                 - 2-item tuple containing: (locator strategy, locator identifying string)
+        # :return:                String value
+        """
+        element = self.driver.find_element(*locator)
+        element_text = element.text
+        return element_text

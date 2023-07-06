@@ -31,19 +31,34 @@ class HomePage(BasePage):
         else:
             return False
 
-    def close_banner(self):
-        banner = self.driver.find_element(*self.banner_iframe)
-        self.driver.switch_to.frame(banner)
+    def close_banner(self) -> None:
+        """
+        Closes advertisement banner on the home page and returning focus on the page
+        :return:        True if banner is closed and  focus return to default content (the web page itself)
+                        False if banner still on the screen
+        """
+        self.switch_to_frame(self.banner_iframe)
         self.click(self.banner_close_button)
         self.driver.switch_to.default_content()
 
     def is_banner_closed(self) -> bool:
         """
-        Closes advertisement banner on the home page
+        Checking if advertisement banner closed
         :return:        True if banner is closed and  focus return to default content (the web page itself)
                         False if banner still on the screen
         """
         if self.is_not_displayed(self.banner_iframe):
+            return True
+        else:
+            return False
+
+    def main_page_check_elements(self) -> bool:
+        """
+        Check that home page contains "Happy elements"
+        :return:        True if all elements are displayed
+                        False if any elements missed
+        """
+        if all([self.is_displayed(element) for element in self.home_happy_elements]):
             return True
         else:
             return False
